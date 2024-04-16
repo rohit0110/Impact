@@ -74,7 +74,15 @@ const App = () => {
     if (nodes.length === 1) {
       setSelectedNodeId(nodes[0]);
     } else {
+      console.log("works");
       setSelectedNodeId(null);
+    }
+  };
+
+  const handleBackgroundClick = (event) => {
+    console.log("Works");
+    if (!event.nodes.length) {
+      setSelectedNodeId(null); // Clear the selected node ID only if no node is clicked
     }
   };
 
@@ -84,6 +92,7 @@ const App = () => {
     let dependentEdges = [];
   
     const visitedNodes = new Set(); // To keep track of visited nodes
+    const visitedEdges = new Set();
   
     const findDependents = (nodeId) => {
       if (visitedNodes.has(nodeId)) return; // Skip if the node has already been visited
@@ -96,7 +105,10 @@ const App = () => {
         const targetNode = graph.nodes.find(node => node.id === edge.to);
         if (targetNode) {
           // Add the target node and edge to the dependent lists
-          dependentEdges.push(edge);
+          if (!(visitedEdges.has(edge))) {
+            dependentEdges.push(edge);
+            visitedEdges.add(edge);
+          }
           if (visitedNodes.has(targetNode.id)) return;
           dependentNodes.push(targetNode);
           // Recursively find dependents of the target node
@@ -118,16 +130,16 @@ const App = () => {
   const { dependentNodes, dependentEdges } = getDependents(selectedNodeId, graph);
 
   // Generate the graph data with dynamic styling for dependent nodes
-const graphData = {
-  nodes: graph.nodes.map(node => ({
-    ...node,
-    color: dependentNodes.some(depNode => depNode.id === node.id) ? 'red' : 'lightblue' // Highlight dependent nodes in red
-  })),
-  edges: graph.edges.map(edge => ({
-    ...edge,
-    color: dependentEdges.some(depEdge => depEdge.from === edge.from && depEdge.to === edge.to) ? 'red' : 'black' // Highlight dependent edges in red
-  }))
-};
+  const graphData = {
+    nodes: graph.nodes.map(node => ({
+      ...node,
+      color: dependentNodes.some(depNode => depNode.id === node.id) ? 'red' : 'lightblue' // Highlight dependent nodes in red
+    })),
+    edges: graph.edges.map(edge => ({
+      ...edge,
+      color: dependentEdges.some(depEdge => depEdge.from === edge.from && depEdge.to === edge.to) ? 'red' : 'black' // Highlight dependent edges in red
+    }))
+  };
 
   return (
     <div>
@@ -166,7 +178,7 @@ const graphData = {
         <Graph
           graph={graphData}
           options={graphOptions} // You can provide options for the graph visualization here
-          events={{ selectNode: handleNodeClick }}
+          events={{ selectNode: handleNodeClick, click: handleBackgroundClick }}
           style={{ width: '100%', height: '600px' }} // Set the size of the canvas
         />
       </div>

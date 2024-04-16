@@ -6,4 +6,7 @@ TODO//
 4) Allow different shapes for nodes //DONE
 5) Print all dependent edges of the selected node //DONE
 6) Highlight all dependent Nodes //DONE (Bug: Color change is there but all immediate nodes are bold, default behaviour prolly)
-7) Add labels to edges
+7) Unselect nodes by background click //DONE
+8) Add labels to edges
+9) Click on edges to get edge details
+10) Add Multiple Edges
