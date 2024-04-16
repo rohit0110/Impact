@@ -83,7 +83,12 @@ const App = () => {
     let dependentNodes = [];
     let dependentEdges = [];
   
+    const visitedNodes = new Set(); // To keep track of visited nodes
+  
     const findDependents = (nodeId) => {
+      if (visitedNodes.has(nodeId)) return; // Skip if the node has already been visited
+      visitedNodes.add(nodeId); // Mark the current node as visited
+  
       // Find edges with the given node as the source
       const outEdges = graph.edges.filter(edge => edge.from === nodeId);
       outEdges.forEach(edge => {
@@ -91,8 +96,9 @@ const App = () => {
         const targetNode = graph.nodes.find(node => node.id === edge.to);
         if (targetNode) {
           // Add the target node and edge to the dependent lists
-          dependentNodes.push(targetNode);
           dependentEdges.push(edge);
+          if (visitedNodes.has(targetNode.id)) return;
+          dependentNodes.push(targetNode);
           // Recursively find dependents of the target node
           findDependents(targetNode.id);
         }
@@ -119,7 +125,7 @@ const graphData = {
   })),
   edges: graph.edges.map(edge => ({
     ...edge,
-    color: dependentEdges.some(depEdge => depEdge.id === edge.id) ? 'red' : 'black' // Highlight dependent edges in red
+    color: dependentEdges.some(depEdge => depEdge.from === edge.from && depEdge.to === edge.to) ? 'red' : 'black' // Highlight dependent edges in red
   }))
 };
 
