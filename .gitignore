@@ -1,0 +1,24 @@
+impact_venv/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+impact_frontend/node_modules
+impact_frontend/.pnp
+impact_frontend/.pnp.js
+
+# testing
+impact_frontend/coverage
+
+# production
+impact_frontend/build
+
+# misc
+impact_frontend/.DS_Store
+impact_frontend/.env.local
+impact_frontend/.env.development.local
+impact_frontend/.env.test.local
+impact_frontend/.env.production.local
+
+impact_frontend/npm-debug.log*
+impact_frontend/yarn-debug.log*
+impact_frontend/yarn-error.log*
